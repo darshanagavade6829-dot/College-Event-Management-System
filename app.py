@@ -15,12 +15,14 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CA_PATH = os.path.join(BASE_DIR, os.getenv("CA_PATH", "isrgrootx1.pem"))
 
+
+
 DB_CONFIG = {
-    "host": os.getenv("gateway01.ap-northeast-1.prod.aws.tidbcloud.com"),
+    "host": os.getenv("TIDB_HOST"),
     "port": int(os.getenv("TIDB_PORT", "4000")),
-    "user": os.getenv("3GZsHct6mgwPpAs.root"),
-    "password": os.getenv("Cvckoz62EbD8m8zb"),
-    "database": os.getenv("college_event_db", "college_event_db"),
+    "user": os.getenv("TIDB_USER"),
+    "password": os.getenv("TIDB_PASSWORD"),
+    "database": os.getenv("TIDB_DB_NAME", "college_event_db"),
     "ssl_ca": CA_PATH,
     "ssl_verify_cert": True,
     "ssl_verify_identity": True,
