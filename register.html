@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="panel">
+      <a href="{{ url_for('index') }}" class="text-decoration-none">← Back to events</a>
+      <h1 class="h3 mt-3">{{ event.title }}</h1>
+      <p class="text-secondary">{{ event.event_date.strftime('%d %B %Y') }} · {{ event.venue }}</p>
+      <hr>
+      <form method="post">
+        <div class="mb-3"><label class="form-label">Full name</label><input class="form-control" name="student_name" required></div>
+        <div class="mb-3"><label class="form-label">College email</label><input class="form-control" type="email" name="email" required></div>
+        <div class="mb-3"><label class="form-label">Department</label>
+          <select class="form-select" name="department" required>
+            <option value="">Choose department</option><option>Computer Engineering</option><option>Information Technology</option><option>Artificial Intelligence</option><option>Electronics</option><option>Mechanical Engineering</option><option>Civil Engineering</option><option>Other</option>
+          </select>
+        </div>
+        <div class="mb-3"><label class="form-label">Study year</label>
+          <select class="form-select" name="year" required><option value="">Choose year</option><option value="1">First year</option><option value="2">Second year</option><option value="3">Third year</option><option value="4">Final year</option></select>
+        </div>
+        <button class="btn btn-primary">Confirm registration</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

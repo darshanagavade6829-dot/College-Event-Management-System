@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Registrations{% endblock %}
+{% block content %}
+<h1 class="h3 mb-1">Participant registrations</h1>
+<p class="text-secondary mb-4">Student and event details joined from the database.</p>
+<div class="panel table-responsive">
+<table class="table table-hover align-middle mb-0">
+<thead><tr><th>Student</th><th>Department / Year</th><th>Event</th><th>Event date</th><th>Registered on</th></tr></thead>
+<tbody>
+{% for row in rows %}
+<tr><td><strong>{{ row.full_name }}</strong><div class="small text-secondary">{{ row.email }}</div></td><td>{{ row.department }}<div class="small text-secondary">Year {{ row.study_year }}</div></td><td>{{ row.event_title }}</td><td>{{ row.event_date.strftime('%d %b %Y') }}</td><td>{{ row.registration_date.strftime('%d %b %Y %H:%M') }}</td></tr>
+{% else %}<tr><td colspan="5" class="text-center text-secondary py-4">No registrations yet.</td></tr>{% endfor %}
+</tbody></table>
+</div>
+{% endblock %}
