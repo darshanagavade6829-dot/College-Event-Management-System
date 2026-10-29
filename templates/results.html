@@ -1,0 +1,91 @@
+
+{% extends "base.html" %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Event Results</h2>
+
+    <div class="card p-4 mb-4">
+        <h4>Add Result</h4>
+
+        <form method="POST" action="{{ url_for('results') }}">
+            <div class="mb-3">
+                <label class="form-label">Select Event</label>
+                <select name="event_id" class="form-select" required>
+                    <option value="">Choose Event</option>
+                    {% for event in events %}
+                    <option value="{{ event.event_id }}">
+                        {{ event.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Select Student</label>
+                <select name="student_id" class="form-select" required>
+                    <option value="">Choose Student</option>
+                    {% for student in students %}
+                    <option value="{{ student.student_id }}">
+                        {{ student.full_name }} ({{ student.email }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Position</label>
+                <select name="position" class="form-select" required>
+                    <option value="">Choose Position</option>
+                    <option value="1">1st Place</option>
+                    <option value="2">2nd Place</option>
+                    <option value="3">3rd Place</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Result</button>
+        </form>
+    </div>
+
+    <div class="card p-4">
+        <h4>Winners List</h4>
+
+        {% if winners %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Student Name</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for winner in winners %}
+                    <tr>
+                        <td>{{ winner.event_title }}</td>
+                        <td>{{ winner.full_name }}</td>
+                        <td>
+                            {% if winner.position == 1 %}
+                                1st Place
+                            {% elif winner.position == 2 %}
+                                2nd Place
+                            {% elif winner.position == 3 %}
+                                3rd Place
+                            {% else %}
+                                {{ winner.position }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p>No results added yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
