@@ -1,36 +1,73 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}CEMS{% endblock %} | College Event Management</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark app-nav">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">🎓 CEMS</a>
-    <div class="navbar-nav ms-auto flex-row gap-3">
-      <a class="nav-link" href="{{ url_for('index') }}">Events</a>
-      <a class="nav-link" href="{{ url_for('registrations') }}">Registrations</a>
-      <a class="nav-link" href="{{ url_for('results') }}">Results</a>
+
+{% extends "base.html" %}
+
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>College Events</h2>
+        <p class="text-secondary">Explore and register for upcoming events.</p>
     </div>
-  </div>
-</nav>
-<main class="container py-4">
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert {{ 'alert-success' if category == 'success' else 'alert-warning' }} alert-dismissible fade show">
-          {{ message }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 h-100">
+            <h6>Total Events</h6>
+            <h3>{{ event_count }}</h3>
         </div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-  {% block content %}{% endblock %}
-</main>
-<footer class="text-center py-4 text-secondary small">College Event Management System · DBMS Mini Project</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 h-100">
+            <h6>Total Students</h6>
+            <h3>{{ student_count }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 h-100">
+            <h6>Total Registrations</h6>
+            <h3>{{ registration_count }}</h3>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">Available Events</h4>
+
+{% if events %}
+<div class="row g-4">
+    {% for event in events %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.title }}</h5>
+                <p class="card-text">
+                    {{ event.description or 'No description available.' }}
+                </p>
+                <p class="mb-2">
+                    <strong>Date:</strong> {{ event.event_date }}
+                </p>
+                <p class="mb-2">
+                    <strong>Venue:</strong> {{ event.venue }}
+                </p>
+                <p class="mb-3">
+                    <strong>Registered:</strong>
+                    {{ event.registered_count }} / {{ event.capacity }}
+                </p>
+                {% if event.registered_count < event.capacity %}
+                <a href="{{ url_for('register', event_id=event.event_id) }}"
+                   class="btn btn-primary">Register Now</a>
+                {% else %}
+                <button class="btn btn-secondary" disabled>Event Full</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    No events available yet. Please add an event to display it here.
+</div>
+{% endif %}
+{% endblock %}
