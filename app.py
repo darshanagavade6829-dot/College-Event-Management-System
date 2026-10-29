@@ -1,7 +1,9 @@
 
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from functools import wraps
+from werkzeug.security import check_password_hash
 import mysql.connector
 from mysql.connector import Error
 
