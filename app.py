@@ -30,6 +30,54 @@ DB_CONFIG = {
     "ssl_verify_identity": True,
 }
 
+def login_required(route_function):
+    @wraps(route_function)
+    def wrapper(*args, **kwargs):
+        if "admin_id" not in session:
+            flash("Please login as admin first.", "error")
+            return redirect(url_for("login"))
+        return route_function(*args, **kwargs)
+    return wrapper
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+
+        conn = get_db_connection()
+        cur = conn.cursor(dictionary=True)
+        try:
+            cur.execute(
+                "SELECT admin_id, username, full_name, password_hash "
+                "FROM admins WHERE username = %s",
+                (username,)
+            )
+            admin = cur.fetchone()
+        finally:
+            cur.close()
+            conn.close()
+
+        if admin and check_password_hash(admin["password_hash"], password):
+            session.clear()
+            session["admin_id"] = admin["admin_id"]
+            session["admin_username"] = admin["username"]
+            session["admin_name"] = admin["full_name"]
+            flash("Admin login successful!", "success")
+            return redirect(url_for("index"))
+
+        flash("Invalid username or password.", "error")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You have been logged out.", "success")
+    return redirect(url_for("login"))
+
 def get_db_connection():
     return mysql.connector.connect(**DB_CONFIG)
 
